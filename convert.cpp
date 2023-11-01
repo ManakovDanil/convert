@@ -1,49 +1,50 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <algorithm>
+#include <cctype>
 
 using namespace std;
 
 map<string, unsigned long long> convert_ed = {
-    {"b", 1},
-    {"kb", 1024},
-    {"mb", 1024 * 1024},
-    {"gb", 1024 * 1024 * 1024},
-    {"tb", 1024ULL * 1024 * 1024 * 1024},
-    {"pb", 1024ULL * 1024 * 1024 * 1024 * 1024},
-    {"eb", 1024ULL * 1024 * 1024 * 1024 * 1024 * 1024}
+    {"b", 1ULL},
+    {"kb", 1024ULL},
+    {"mb", 1024ULL * 1024ULL},
+    {"gb", 1024ULL * 1024ULL * 1024ULL},
+    {"tb", 1024ULL * 1024ULL * 1024ULL * 1024ULL},
+    {"pb", 1024ULL * 1024ULL * 1024ULL * 1024ULL * 1024ULL},
+    {"eb", 1024ULL * 1024ULL * 1024ULL * 1024ULL * 1024ULL * 1024ULL}
 };
 
-string toLower(string str) {
-    transform(str.begin(), str.end(), str.begin(), ::tolower);
-    return str;
+bool ProverkaValid(const string& unit) {
+    return convert_ed.find(unit) != convert_ed.end();
 }
 
-int main() {
-    
-    double value;
-    string input_ed, target_ed;
+int main(int argc, char* argv[]) {
 
-    cout << "Введите значение с единицей измерения (например, 2 tb b): ";
-    cin >> value >> input_ed >> target_ed;
+    string input = argv[1];
+    string target = argv[2];
 
-    if (value < 0) {
-        cerr << "Введены некоректные данные" << endl;
+    string numbers;
+    string input_ed;
+
+    for (char c : input) {
+        if (isdigit(c)) {
+            numbers += c;
+        } else {
+            input_ed += c;
+        }
+    }
+
+    if (numbers.empty() || input_ed.empty() || !ProverkaValid(input_ed) || !ProverkaValid(target)) {
+        cerr << "Введены некорректные данные или единицы измерения." << endl;
         return 1;
     }
 
-    input_ed = toLower(input_ed);
-    target_ed = toLower(target_ed);
+    unsigned long long value = stoull(numbers);
+    unsigned long long bytes = value * convert_ed[input_ed];
+    double result = static_cast<double>(bytes) / convert_ed[target];
 
-    if (convert_ed.find(input_ed) != convert_ed.end() && convert_ed.find(target_ed) != convert_ed.end()) {
-        unsigned long long bytes = static_cast<unsigned long long>(value * convert_ed[input_ed]);
-        double result = static_cast<double>(bytes) / convert_ed[target_ed];
-        cout << value << " " << input_ed << " = " << result << " " << target_ed << endl;
-    } else {
-        cerr << "Введены некорректные единицы измерения." << endl;
-        return 1;
-    }
+    cout << fixed << value << input_ed << " = " << result << target << endl;
 
     return 0;
 }
