@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 #include <cctype>
+#include <iomanip>
 
 using namespace std;
 
@@ -42,9 +43,7 @@ int main(int argc, char* argv[]) {
 
     unsigned long long value = stoull(numbers);
     unsigned long long bytes = value * convert_ed[input_ed];
-    double result = static_cast<double>(bytes) / convert_ed[target];
-
-    cout << fixed << value << input_ed << " = " << result << target << endl;
+    cout << fixed << setprecision(0) << value << input_ed << " = " << bytes / static_cast<double>(convert_ed[target]) << target << endl;
 
     return 0;
 }
