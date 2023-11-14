@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
     //setprecision(0)
     unsigned long long value = stoull(numbers);
     unsigned long long bytes = value * convert_ed[input_ed];
-    cout << fixed << setprecision(0) << value << bytes / static_cast<double>(convert_ed[target]) << endl;
+    cout << fixed << setprecision(0) << bytes / static_cast<double>(convert_ed[target]) << endl;
 
     return 0;
 }
