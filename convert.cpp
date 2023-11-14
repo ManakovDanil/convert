@@ -40,10 +40,10 @@ int main(int argc, char* argv[]) {
         cerr << "Введены некорректные данные или единицы измерения." << endl;
         return 1;
     }
-
+    //setprecision(0)
     unsigned long long value = stoull(numbers);
     unsigned long long bytes = value * convert_ed[input_ed];
-    cout << fixed << setprecision(0) << value << input_ed << " = " << bytes / static_cast<double>(convert_ed[target]) << target << endl;
+    cout << fixed << setprecision(0) << value << bytes / static_cast<double>(convert_ed[target]) << endl;
 
     return 0;
 }
