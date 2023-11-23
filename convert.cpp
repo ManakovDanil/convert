@@ -1,33 +1,38 @@
 #include <iostream>
 #include <string>
-#include <map>
 #include <cctype>
 #include <iomanip>
+#include "const_value.h"
 
 using namespace std;
 
-map<string, unsigned long long> convert_ed = {
-    {"b", 1ULL},
-    {"kb", 1024ULL},
-    {"mb", 1024ULL * 1024ULL},
-    {"gb", 1024ULL * 1024ULL * 1024ULL},
-    {"tb", 1024ULL * 1024ULL * 1024ULL * 1024ULL},
-    {"pb", 1024ULL * 1024ULL * 1024ULL * 1024ULL * 1024ULL},
-    {"eb", 1024ULL * 1024ULL * 1024ULL * 1024ULL * 1024ULL * 1024ULL}
-};
+void ProcessInput(string& numbers, string& input_ed, const string& input);
+bool ValidateInput(const string& numbers, const string& input_ed, const string& target);
 
-bool ProverkaValid(const string& unit) {
+bool validation(int argc, char* argv[], string& numbers, string& input_ed, string& target) {
+    if (argc != 3) {
+        cerr << "Некорректное количество аргументов." << endl;
+        return false;
+    }
+
+    string input = argv[1];
+    target = argv[2];
+
+    ProcessInput(numbers, input_ed, input);
+
+    if (!ValidateInput(numbers, input_ed, target)) {
+        cerr << "Введены некорректные данные или единицы измерения." << endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool isUnitInMap(const string& unit) {
     return convert_ed.find(unit) != convert_ed.end();
 }
 
-int main(int argc, char* argv[]) {
-
-    string input = argv[1];
-    string target = argv[2];
-
-    string numbers;
-    string input_ed;
-
+void ProcessInput(string& numbers, string& input_ed, const string& input) {
     for (char c : input) {
         if (isdigit(c)) {
             numbers += c;
@@ -35,15 +40,26 @@ int main(int argc, char* argv[]) {
             input_ed += c;
         }
     }
+}
 
-    if (numbers.empty() || input_ed.empty() || !ProverkaValid(input_ed) || !ProverkaValid(target)) {
-        cerr << "Введены некорректные данные или единицы измерения." << endl;
+bool ValidateInput(const string& numbers, const string& input_ed, const string& target) {
+    return !numbers.empty() && !input_ed.empty() && isUnitInMap(input_ed) && isUnitInMap(target);
+}
+
+void ConvertAndPrintResult(const string& numbers, const string& input_ed, const string& target) {
+    unsigned long long value = stoull(numbers);
+    unsigned long long bytes = value * convert_ed.at(input_ed);
+    cout << fixed << setprecision(0) << bytes / static_cast<double>(convert_ed.at(target)) << endl;
+}
+
+int main(int argc, char* argv[]) {
+    string numbers, input_ed, target;
+
+    if (!validation(argc, argv, numbers, input_ed, target)) {
         return 1;
     }
-    //setprecision(0)
-    unsigned long long value = stoull(numbers);
-    unsigned long long bytes = value * convert_ed[input_ed];
-    cout << fixed << setprecision(0) << bytes / static_cast<double>(convert_ed[target]) << endl;
+
+    ConvertAndPrintResult(numbers, input_ed, target);
 
     return 0;
 }
