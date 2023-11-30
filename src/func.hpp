@@ -1,13 +1,5 @@
-#include <iostream>
-#include <string>
-#include <cctype>
-#include <iomanip>
 #include "const_value.h"
-
-using namespace std;
-
-void ProcessInput(string& numbers, string& input_ed, const string& input);
-bool ValidateInput(const string& numbers, const string& input_ed, const string& target);
+#include "convert.hpp"
 
 bool validation(int argc, char* argv[], string& numbers, string& input_ed, string& target) {
     if (argc != 3) {
@@ -27,7 +19,6 @@ bool validation(int argc, char* argv[], string& numbers, string& input_ed, strin
 
     return true;
 }
-
 bool isUnitInMap(const string& unit) {
     return convert_ed.find(unit) != convert_ed.end();
 }
@@ -50,16 +41,4 @@ void ConvertAndPrintResult(const string& numbers, const string& input_ed, const 
     unsigned long long value = stoull(numbers);
     unsigned long long bytes = value * convert_ed.at(input_ed);
     cout << fixed << setprecision(0) << bytes / static_cast<double>(convert_ed.at(target)) << endl;
-}
-
-int main(int argc, char* argv[]) {
-    string numbers, input_ed, target;
-
-    if (!validation(argc, argv, numbers, input_ed, target)) {
-        return 1;
-    }
-
-    ConvertAndPrintResult(numbers, input_ed, target);
-
-    return 0;
 }
