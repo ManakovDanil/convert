@@ -1,5 +1,5 @@
-#include "convert.hpp"
-#include "func.hpp"
+#include "convert_main.cpp"
+#include "convert_func.hpp"
 
 using namespace std;
 
